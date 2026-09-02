@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Letter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #161616;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .scene {
+            perspective: 1400px;
+            width: 450px;
+            height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flower-wrapper {
+            position: relative;
+            width: 340px;
+            height: 340px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            animation: hoverEffect 3s ease-in-out infinite;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes hoverEffect {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(0.5deg); }
+        }
+
+        .flower-wrapper.open {
+            animation: none;
+            transform: scale(1.05);
+        }
+
+        /* The hidden letter revealed underneath matching the video's layout */
+        .letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            width: 290px;
+            height: 360px;
+            background: #fdfbf7;
+            padding: 25px 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border-radius: 3px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+            z-index: 1;
+            background-image: linear-gradient(#e5e5e5 1px, transparent 1px);
+            background-size: 100% 22px;
+            overflow: hidden;
+        }
+
+        .flower-wrapper.open .letter {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+            z-index: 15;
+        }
+
+        .letter h3 {
+            font-size: 13px;
+            color: #222;
+            margin-bottom: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+        }
+
+        .letter p {
+            font-size: 10.5px;
+            line-height: 22px;
+            color: #333;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 8px;
+        }
+
+        .letter .signature {
+            margin-top: 10px;
+            text-align: right;
+            font-size: 11px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #111;
+        }
+
+        /* Lily Petal Structure mimicking the video's folded paper flower */
+        .petal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 140px;
+            height: 220px;
+            background: #f4f4f4;
+            transform-origin: bottom center;
+            transition: transform 1.2s cubic-bezier(0.3, 0, 0.1, 1), opacity 0.8s ease;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.25), 0 4px 8px rgba(0,0,0,0.3);
+            border: 1px solid #dcdcdc;
+            z-index: 5;
+            /* Hand-drawn sketch style texture lines using repeating gradients */
+            background-image: 
+                radial-gradient(ellipse at center, #ffffff 0%, #e6e6e6 70%, #cccccc 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(0,0,0,0.05) 4px, rgba(0,0,0,0.05) 5px),
+                repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px);
+        }
+
+        /* Defining individual petal shapes via clip-path to look like pointed lily petals */
+        .petal-1 { clip-path: polygon(50% 0%, 80% 25%, 90% 70%, 50% 100%, 10% 70%, 20% 25%); }
+
+        /* Positioning the 8 petals in a radial burst */
+        .p1 { transform: translate(-50%, -100%) rotate(0deg); }
+        .p2 { transform: translate(-50%, -100%) rotate(45deg); }
+        .p3 { transform: translate(-50%, -100%) rotate(90deg); }
+        .p4 { transform: translate(-50%, -100%) rotate(135deg); }
+        .p5 { transform: translate(-50%, -100%) rotate(180deg); }
+        .p6 { transform: translate(-50%, -100%) rotate(225deg); }
+        .p7 { transform: translate(-50%, -100%) rotate(270deg); }
+        .p8 { transform: translate(-50%, -100%) rotate(315deg); }
+
+        /* Opening Animation: Petals split and fold open outwards like in the video */
+        .flower-wrapper.open .p1 { transform: translate(-50%, -240px) rotate(0deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p2 { transform: translate(120px, -200px) rotate(45deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p3 { transform: translate(220px, -100px) rotate(90deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p4 { transform: translate(160px, 80px) rotate(135deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p5 { transform: translate(-50%, 160px) rotate(180deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p6 { transform: translate(-220px, 80px) rotate(225deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p7 { transform: translate(-280px, -100px) rotate(270deg) scale(0.7); opacity: 0; }
+        .flower-wrapper.open .p8 { transform: translate(-180px, -200px) rotate(315deg) scale(0.7); opacity: 0; }
+
+        /* Central intersecting paper band seen in the video holding the flower together */
+        .center-band {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 180px;
+            height: 26px;
+            background: #ffffff;
+            border: 2px solid #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+        }
+
+        .center-band::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px);
+        }
+
+        .band-text {
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #111;
+            font-family: 'Courier New', Courier, monospace;
+            z-index: 2;
+        }
+
+        .flower-wrapper.open .center-band {
+            transform: translate(-50%, -50%) scale(0) rotate(180deg);
+            opacity: 0;
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 35px;
+            color: #777;
+            font-size: 13px;
+            letter-spacing: 1px;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            font-family: monospace;
+        }
+
+        .flower-wrapper.open ~ .instruction {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scene">
+        <div class="flower-wrapper" id="flowerCard" onclick="toggleFlower()">
+            <!-- Center Paper Band matching the video style -->
+            <div class="center-band">
+                <span class="band-text">OPEN ME</span>
+            </div>
+
+            <!-- Folded Sketched Lily Petals -->
+            <div class="petal petal-1 p1"></div>
+            <div class="petal petal-1 p2"></div>
+            <div class="petal petal-1 p3"></div>
+            <div class="petal petal-1 p4"></div>
+            <div class="petal petal-1 p5"></div>
+            <div class="petal petal-1 p6"></div>
+            <div class="petal petal-1 p7"></div>
+            <div class="petal petal-1 p8"></div>
+
+            <!-- Funny Letter Content -->
+            <div class="letter">
+                <h3>Hey,</h3>
+                <p>Can I Get Your Number.</p>
+                <div class="signature">- The Brains Behind This</div>
+            </div>
+        </div>
+        <div class="instruction">[ Click to unfold ]</div>
+    </div>
+
+    <script>
+        function toggleFlower() {
+            const flower = document.getElementById('flowerCard');
+            flower.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
