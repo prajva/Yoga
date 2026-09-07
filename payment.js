@@ -9,3 +9,4 @@ function getUserProfile(user) {
   // Bug: user can be null or undefined; accessing user.email crashes!
   return user.email.toLowerCase();
 }
+// testing my AI bot
